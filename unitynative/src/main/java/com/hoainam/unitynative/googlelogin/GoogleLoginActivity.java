@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.BeginSignInResult;
@@ -76,13 +77,21 @@ public class GoogleLoginActivity extends Activity {
     private void FinishSuccess(String token){
         oneTapClient.signOut();
         finish();
-        UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackSuccessFunc, token);
+        if (GoogleLogin.callbackTargetName != null){
+            UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackSuccessFunc, token);
+        }else {
+            Log.d("GoogleLogin", "login success token=" + token);
+        }
     }
 
     private void FinishFailed(String errMsg){
         oneTapClient.signOut();
         finish();
-        UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackFailFunc, errMsg);
+        if (GoogleLogin.callbackTargetName != null) {
+            UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackFailFunc, errMsg);
+        }else {
+            Log.e("GoogleLogin", "login fail err=" + errMsg);
+        }
     }
 
     //endregion

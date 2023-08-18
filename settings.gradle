@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "UnityAndroidNative"
 include ':app'
 include ':unitynative'
+include ':game8'

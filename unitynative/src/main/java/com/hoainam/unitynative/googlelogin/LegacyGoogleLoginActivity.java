@@ -3,6 +3,7 @@ package com.hoainam.unitynative.googlelogin;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -58,13 +59,21 @@ public class LegacyGoogleLoginActivity extends Activity {
     private void FinishSuccess(String token){
         mGoogleSignInClient.signOut();
         finish();
-        UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackSuccessFunc, token);
+        if (GoogleLogin.callbackTargetName != null){
+            UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackSuccessFunc, token);
+        }else {
+            Log.d("GoogleLogin", "login success token=" + token);
+        }
     }
 
     private void FinishFailed(String errMsg){
         mGoogleSignInClient.signOut();
         finish();
-        UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackFailFunc, errMsg);
+        if (GoogleLogin.callbackTargetName != null){
+            UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackFailFunc, errMsg);
+        }else {
+            Log.e("GoogleLogin", "login fail err=" + errMsg);
+        }
     }
 
     //endregion
