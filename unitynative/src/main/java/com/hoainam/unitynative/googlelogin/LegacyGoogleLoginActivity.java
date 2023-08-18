@@ -19,7 +19,6 @@ public class LegacyGoogleLoginActivity extends Activity {
     //region data members
 
     private static final int RC_SIGN_IN = 2;
-    private GoogleSignInClient mGoogleSignInClient;
 
     //endregion
 
@@ -29,8 +28,8 @@ public class LegacyGoogleLoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, BuildGoogleSignInOptions());
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        GoogleSignInClient client = GoogleSignIn.getClient(this, BuildGoogleSignInOptions());
+        Intent signInIntent = client.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -57,7 +56,6 @@ public class LegacyGoogleLoginActivity extends Activity {
     //region finish activity
 
     private void FinishSuccess(String token){
-        mGoogleSignInClient.signOut();
         finish();
         if (GoogleLogin.callbackTargetName != null){
             UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackSuccessFunc, token);
@@ -67,7 +65,6 @@ public class LegacyGoogleLoginActivity extends Activity {
     }
 
     private void FinishFailed(String errMsg){
-        mGoogleSignInClient.signOut();
         finish();
         if (GoogleLogin.callbackTargetName != null){
             UnityPlayer.UnitySendMessage(GoogleLogin.callbackTargetName, GoogleLogin.callbackFailFunc, errMsg);
