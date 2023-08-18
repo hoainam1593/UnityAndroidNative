@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">UnityAndroidNative</string>
+    <string name="apple_login">apple login</string>
 </resources>
