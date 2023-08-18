@@ -1,16 +1,18 @@
 package com.hoainam.unitynative.applelogin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.WebView;
 
 import com.hoainam.unitynative.R;
 
-public class AppleLoginActivity extends AppCompatActivity {
+import java.util.UUID;
+
+public class AppleLoginActivity extends Activity {
 
     private WebView webView;
+    private static final String loginUrl = "https://appleid.apple.com/auth/authorize?response_type=code&client_id=%1$s&redirect_uri=%2$s&state=%3$s&response_mode=form_post&context_uri=%4$s";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,9 @@ public class AppleLoginActivity extends AppCompatActivity {
     private void SetupWebview(){
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new AppleLoginWebClient());
-        webView.loadUrl("https://www.google.com/");
+
+        String state = UUID.randomUUID().toString();
+        String url = String.format(loginUrl, AppleLogin.clientId, AppleLogin.redirectUrl, state, AppleLogin.contextUrl);
+        webView.loadUrl(url);
     }
 }

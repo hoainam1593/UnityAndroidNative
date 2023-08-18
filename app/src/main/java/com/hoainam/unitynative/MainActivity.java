@@ -14,7 +14,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         findViewById(R.id.btn_apple_login).setOnClickListener(view -> {
-            AppleLogin.Login(this);
+            AppleLogin.Login(this,
+                    "com.mobirix.mbgk.web",
+                    "https://girls-knightage-6403208.firebaseapp.com/__/auth/handler",
+                    "file://asset/www/index.html?apn=com.mobirix.mbgk");
         });
     }
 }
