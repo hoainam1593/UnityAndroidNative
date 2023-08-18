@@ -1,6 +1,7 @@
 package com.hoainam.unitynative.applelogin;
 
 import android.util.Log;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -11,6 +12,12 @@ public class AppleLoginWebClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         Log.e("AppleLogin", url);
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        Log.e("AppleLogin", request.getUrl().toString());
+        return true;
     }
 }
