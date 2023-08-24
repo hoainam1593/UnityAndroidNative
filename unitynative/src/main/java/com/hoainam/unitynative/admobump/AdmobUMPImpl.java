@@ -11,6 +11,7 @@ import com.google.android.ump.ConsentInformation;
 import com.google.android.ump.ConsentRequestParameters;
 import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
+import com.unity3d.player.UnityPlayer;
 
 //https://developers.google.com/interactive-media-ads/ump/android/quick-start
 
@@ -18,10 +19,16 @@ public class AdmobUMPImpl {
 
     private final Activity activity;
     private final String testDevice;
+    private final String targetName;
+    private final String successFunc;
+    private final String failFunc;
     private ConsentInformation consentInfo;
-    public AdmobUMPImpl(Activity activity, String testDevice){
+    public AdmobUMPImpl(Activity activity, String testDevice, String targetName, String successFunc, String failFunc){
         this.activity = activity;
         this.testDevice = testDevice;
+        this.targetName = targetName;
+        this.successFunc = successFunc;
+        this.failFunc = failFunc;
     }
 
     public void ShowConsentForm(){
@@ -37,12 +44,12 @@ public class AdmobUMPImpl {
         if (available){
             LoadConsentForm();
         }else {
-            Log.e("UMP", "consent form is not available");
+            FinishFailed("consent form is not available");
         }
     }
 
     private void onRequestConsentInfoUpdateFail(FormError error){
-        Log.e("UMP", "request consent info update fail, msg=" + error.getMessage());
+        FinishFailed("request consent info update fail, msg=" + error.getMessage());
     }
 
     //endregion
@@ -66,14 +73,12 @@ public class AdmobUMPImpl {
                     statusAsStr = "OBTAINED";
                     break;
             }
-            Log.e("UMP", "not show consent form because consent status=" + statusAsStr);
-
-            //can load ad here
+            FinishSuccess(statusAsStr);
         }
     }
 
     private void onLoadFormFail(FormError error){
-        Log.e("UMP", "load consent form fail, msg=" + error.getMessage());
+        FinishFailed("load consent form fail, msg=" + error.getMessage());
     }
 
     //endregion
@@ -82,6 +87,26 @@ public class AdmobUMPImpl {
 
     private void onFormDismissed(@Nullable FormError error){
         LoadConsentForm();
+    }
+
+    //endregion
+
+    //region finish form
+
+    private void FinishSuccess(String statusCode){
+        if (targetName != null){
+            UnityPlayer.UnitySendMessage(targetName, successFunc, statusCode);
+        }else {
+            Log.d("UMP", "finish consent form successfully");
+        }
+    }
+
+    private void FinishFailed(String errMsg){
+        if (targetName != null){
+            UnityPlayer.UnitySendMessage(targetName, failFunc, errMsg);
+        }else {
+            Log.e("UMP", "finish consent form fail err=" + errMsg);
+        }
     }
 
     //endregion
